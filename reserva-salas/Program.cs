@@ -11,6 +11,17 @@ using reserva_salas.EndPoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var myDefaultCors = "_myDefaultCors";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: myDefaultCors,
+                      policy =>
+                      {
+                          policy.WithOrigins("http://localhost:4200") 
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                      });
+});
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -30,6 +41,7 @@ builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();
 builder.Services.AddScoped<CreateRoomUseCase>();
 builder.Services.AddScoped<GetAvailableRoomsUseCase>();
+builder.Services.AddScoped<GetAllRoomsUseCase>();
 
 //bookings
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
@@ -38,14 +50,16 @@ builder.Services.AddScoped<GetBookingsByDateUseCase>();
 
 var app = builder.Build();
 
+app.UseRouting();
+app.UseCors(myDefaultCors);
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapGroup("/auth").MapIdentityApi<ApplicationUser>();
 UsersEndPoints.MapUsersEndPoints(app);
 RoomEndPoints.MapRoomEndPoints(app);
 BookingEndPoints.MapBookingEndPoints(app);
-
-
-app.UseAuthentication();
-app.UseAuthorization();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
