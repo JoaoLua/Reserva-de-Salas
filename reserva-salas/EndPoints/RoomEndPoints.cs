@@ -11,6 +11,14 @@ namespace reserva_salas.EndPoints
             var group = app.MapGroup("/rooms")
                             .WithTags("Salas")
                             .WithDescription("Room management endpoints");
+
+            group.MapGet("/", async (GetAllRoomsUseCase useCase) =>
+            {
+                var rooms = await useCase.ExecuteAsync();
+                return Results.Ok(rooms);
+            })
+            .WithDescription("Lista todas as salas cadastradas no sistema")
+            .RequireAuthorization();
             group.MapPost("/", async (CreateRoomRequest request, CreateRoomUseCase createRoomUseCase) =>
             {
                 if (request == null)
