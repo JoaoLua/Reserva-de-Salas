@@ -32,6 +32,7 @@ namespace Infrastructure.Repositories
         {
             return await _context.Rooms.ToListAsync();
         }
+
         public async Task DeleteAsync(Guid id)
         {
             var room = await GetByIdAsync(id);

@@ -1,6 +1,10 @@
+using Application.UseCases.BookingUseCases;
+using Application.UseCases.RoomUseCases;
 using Domain.DTOs;
 using Domain.Entities;
+using Domain.Interfaces;
 using Infraestructure.Data;
+using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using reserva_salas.EndPoints;
@@ -21,10 +25,23 @@ builder.Services.AddAuthentication();
 builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+
+//rooms
+builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+builder.Services.AddScoped<CreateRoomUseCase>();
+builder.Services.AddScoped<GetAvailableRoomsUseCase>();
+
+//bookings
+builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+builder.Services.AddScoped<CreateBookingUseCase>();
+builder.Services.AddScoped<GetBookingsByDateUseCase>();
+
 var app = builder.Build();
 
 app.MapGroup("/auth").MapIdentityApi<ApplicationUser>();
 UsersEndPoints.MapUsersEndPoints(app);
+RoomEndPoints.MapRoomEndPoints(app);
+BookingEndPoints.MapBookingEndPoints(app);
 
 
 app.UseAuthentication();
