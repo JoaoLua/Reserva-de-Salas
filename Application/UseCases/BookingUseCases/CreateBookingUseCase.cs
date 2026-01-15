@@ -39,7 +39,8 @@ namespace Application.UseCases.BookingUseCases
                 RoomId = request.RoomId,
                 Date = request.Date,
                 TimeSlot = request.TimeSlot,
-                UserId = userId
+                UserId = userId,
+                Reason = request.Reason
             };
             await _bookingRepository.AddAsync(booking);
             return booking;

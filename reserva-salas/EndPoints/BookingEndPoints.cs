@@ -29,7 +29,9 @@ namespace reserva_salas.EndPoints
                 }
                 catch (Exception ex)
                 {
-                    return Results.BadRequest(new { message = ex.Message });
+                    var errorMessage = ex.InnerException?.Message ?? ex.Message;
+                    Console.WriteLine($"ERRO AO SALVAR: {errorMessage}");
+                    return Results.BadRequest(new { message = errorMessage });
                 }
             });
 
