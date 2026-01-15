@@ -14,6 +14,7 @@ namespace Domain.Interfaces
         Task<IEnumerable<Booking>> GetByDateAsync(DateTime date);
         Task DeleteAsync(Booking booking);
         Task<bool> HasConflictingBooking(Guid roomId, DateTime date, TimeSpan timeSlot);
+        
     }
 }
 
