@@ -47,6 +47,7 @@ builder.Services.AddScoped<GetAllRoomsUseCase>();
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 builder.Services.AddScoped<CreateBookingUseCase>();
 builder.Services.AddScoped<GetBookingsByDateUseCase>();
+builder.Services.AddScoped<CancelBookingUseCase>();
 
 var app = builder.Build();
 

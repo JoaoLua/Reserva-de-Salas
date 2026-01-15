@@ -42,6 +42,27 @@ namespace reserva_salas.EndPoints
             })
             .WithDescription("Retorna todas as reservas de uma data específica")
             .RequireAuthorization();
+
+            group.MapDelete("/{id}", async (Guid id, ClaimsPrincipal user, CancelBookingUseCase useCase) =>
+            {
+                var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (string.IsNullOrEmpty(userId))
+                    return Results.Unauthorized();
+
+                try
+                {
+                    await useCase.ExecuteAsync(id, userId);
+                    return Results.NoContent(); 
+                }
+                catch (Exception ex)
+                {
+                    return Results.BadRequest(new { message = ex.Message });
+                }
+            })
+            .WithDescription("Cancela uma reserva existente")
+            .RequireAuthorization();
+
         }
     }
 }
